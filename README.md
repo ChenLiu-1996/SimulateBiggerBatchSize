@@ -20,6 +20,28 @@ So what we do is simple, assuming `N` is divisible by `n`:
 
 Also, be careful with normalizing the loss. If the loss function is something that uses mean aggregation (i.e., almost all loss functions I use), we need to divide the per-batch loss by a factor of `N/n` during the gradient accumulation, or otherwise the behavior will be inconsistent with actually running on a bigger batch size.
 
+To put it in code:
+
+This is a normal update.
+```
+loss = loss_fn(...)
+
+opt.zero_grad()
+loss.backward()
+opt.step()
+```
+
+This is our update.
+```
+loss = loss_fn(...) / int(N/n)
+
+opt.zero_grad()
+loss.backward()
+
+if batch_idx % int(N/n) == (int(N/n) - 1):
+    opt.step()
+```
+
 ## Details
 This repository currently only contains a single file, as an example on how you would do this.
 
