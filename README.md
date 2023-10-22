@@ -35,11 +35,11 @@ This is our update.
 ```
 loss = loss_fn(...) / int(N/n)
 
-opt.zero_grad()
 loss.backward()
 
 if batch_idx % int(N/n) == (int(N/n) - 1):
     opt.step()
+    opt.zero_grad()
 ```
 
 ## Details
