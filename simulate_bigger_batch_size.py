@@ -90,6 +90,7 @@ def train(args):
 
     '''
     for _ in range(args['train_epochs']):
+        opt.zero_grad()
         for batch_idx, (x, y_true) in enumerate(train_loader):
             x, y_true = x.to(device), y_true.to(device)
 
@@ -111,13 +112,13 @@ def train(args):
 
             '''
 
-            opt.zero_grad()
             loss.backward()
 
             shall_backprop = batch_idx % grad_update_freq == (
                 grad_update_freq - 1)
             if shall_backprop:
                 opt.step()
+                opt.zero_grad()
 
             # Printing to check that the model weights are indeed
             # only updated when a `batch_size_desired` is reached.
